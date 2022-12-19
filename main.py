@@ -60,7 +60,7 @@ class Card(BaseModel):
     iin: int | None = None
     recipient: str | None = None
     system: str | None = None
-    currency: str | None = None
+    #currency: str | None = None
 
 class Lookup(BaseModel):
     verify: bool | None = None
@@ -101,6 +101,9 @@ async def lookup(card):
     if (iin in csvdata):
         res["card"] = {"iin": int(iin)}
         res["card"].update(csvdata[iin])
+        print(card[0:9])
+        if (card[0:9] == '419525008'):
+            res["card"]["currency"] = "UZS"
     else:
         logging.warning('iin %s not found', iin)
     return res
