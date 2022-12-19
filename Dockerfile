@@ -8,6 +8,8 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 # 
 COPY ./main.py /code/
+COPY ./binlist.csv /code/
 
+RUN mkdir -p /code/logs
 # 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8998"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

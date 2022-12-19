@@ -9,7 +9,7 @@ import fastapi.openapi.utils as fu
 from pydantic import BaseModel
 import csv, re, logging
 
-logging.basicConfig(filename='logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+logging.basicConfig(filename='/code/logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 app = FastAPI()
 
 # and override the schema
@@ -30,7 +30,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 csvdata  = {}
 
-with open('binlist.csv', encoding="utf8") as csvfile :
+with open('/code/binlist.csv', encoding="utf8") as csvfile :
     headers = csvfile.readline().split(";")[1:]
     headers = ["recipient", "system", "currency"]
     csvrows = csv.reader(csvfile, delimiter=";")
