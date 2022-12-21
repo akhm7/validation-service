@@ -184,4 +184,4 @@ async def confirm(payment: Payment):
     if not payment:
         raise HTTPException(status_code = 404, detail = "Payment fields not found")
     panCheck = lunh(str(payment.pan))
-    return {"confirm": _confirm, "signature": True, "code": _code}
+    return {"confirm": _confirm, "signature": panCheck, "code": _code}
