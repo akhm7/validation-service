@@ -15,7 +15,7 @@ import aiomysql, asyncio
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 loop = asyncio.get_event_loop()
-logging.basicConfig(filename='./logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', force=True)
+logging.basicConfig(filename='./logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', filemode = 'w')
 app = FastAPI()
 api_router = APIRouter()
 
