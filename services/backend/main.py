@@ -15,17 +15,7 @@ import aiomysql, asyncio
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 loop = asyncio.get_event_loop()
-
-
-logger = logging.getLogger()
-fhandler = logging.FileHandler(filename='./logs/{:%Y-%m-%d}.log', mode='a')
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fhandler.setFormatter(formatter)
-logger.addHandler(fhandler)
-logger.setLevel(logging.DEBUG)
-
-
-logging.basicConfig(filename='./logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+logging.basicConfig(filename='./logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', force=True)
 app = FastAPI()
 api_router = APIRouter()
 
@@ -83,10 +73,10 @@ with open('./binlist.csv', encoding="utf8") as csvfile :
 
 def iinNotConfirm(cardNo):
     if cardNo.startswith(('5440', '5614', '6262', '8600', '9860', '5555', '4073', '4166', '4187', '4294', '4008', '4728', '4062', '4198', '4790')):
-        logger.warning('cardNo %s is humo/uzcard', cardNo)
+        logging.warning('cardNo %s is humo/uzcard', cardNo)
         return False
     elif cardNo[0]!='4':
-        logger.warning('cardNo %s is not visa', cardNo)
+        logging.warning('cardNo %s is not visa', cardNo)
         return False
     else:
         return True
@@ -95,7 +85,7 @@ def iinNotConfirm(cardNo):
 def lunh(cardNo):
     nDigits = len(cardNo)
     if (nDigits < 16):
-        logger.warning('cardNo %s not found', cardNo)
+        logging.warning('cardNo %s not found', cardNo)
         return False
     nSum = 0
     isSecond = False
@@ -184,7 +174,7 @@ async def lookup(card):
         if (card[0:9] == '419525008'):
             res["card"]["currency"] = "UZS"
     else:
-        logger.warning('iin %s not found', iin)
+        logging.warning('iin %s not found', iin)
     if not iinNotConfirm(card):
         res.pop('card', None)
     return res
@@ -215,7 +205,7 @@ async def confirm(payment: Payment):
     if (aml_check and pan_check):
         _code = 10
 
-    logger.warning('%s', payment)
+    logging.warning('%s', payment)
     if not payment:
         raise HTTPException(status_code = 404, detail = "Payment fields not found")
     panCheck = lunh(str(payment.pan))
