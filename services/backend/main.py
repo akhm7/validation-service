@@ -15,7 +15,7 @@ import aiomysql, asyncio
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 loop = asyncio.get_event_loop()
-logging.basicConfig(filename='./logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+logging.basicConfig(filename='./app/logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 app = FastAPI()
 api_router = APIRouter()
 
@@ -64,7 +64,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 csvdata  = {}
 
-with open('./binlist.csv', encoding="utf8") as csvfile :
+with open('./app/binlist.csv', encoding="utf8") as csvfile :
     headers = csvfile.readline().split(";")[1:]
     headers = ["recipient", "system", "currency"]
     csvrows = csv.reader(csvfile, delimiter=";")
