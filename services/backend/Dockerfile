@@ -1,8 +1,8 @@
 FROM python:3.11
 
 RUN mkdir /app
-RUN mkdir /app/logs
 WORKDIR /app
+RUN mkdir logs
 
 ENV PATH="${PATH}:/root/.local/bin"
 ENV PYTHONPATH=.
