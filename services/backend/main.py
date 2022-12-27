@@ -15,13 +15,13 @@ import aiomysql, asyncio
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 loop = asyncio.get_event_loop()
-logging.basicConfig(filename='./logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', filemode = 'w')
+logging.basicConfig(filename='./logs/{:%Y-%m-%d}.log'.format(datetime.now()), filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', force=True)
 app = FastAPI()
 api_router = APIRouter()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8881"],
+    allow_origins=["http://localhost:8883"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -163,20 +163,28 @@ async def lookup(card):
     
     if not card:
         raise HTTPException(status_code=404, detail="Card field is required")
-    res = {"verify": None, "card": None}
+    res = {"verify": None, "card": None, "code": 0}
     iin = re.sub("\s", "", card)
     iin = iin[0:6]
     res["verify"] = lunh(card)
-    if (iin in csvdata):
-        res["card"] = {"iin": int(iin)}
-        res["card"].update(csvdata[iin])
-        print(card[0:9])
-        if (card[0:9] == '419525008'):
-            res["card"]["currency"] = "UZS"
+    if res["verify"] == False:
+        res["code"] == 1
+    elif not card.startswith('419525'):
+        res["verify"] = False
+        res["code"] = 2 # карта не наша
+    elif not iinNotConfirm(card):
+        res["verify"] = False
+        res["code"] = 3 # humo/uzcard
     else:
-        logging.warning('iin %s not found', iin)
-    if not iinNotConfirm(card):
-        res.pop('card', None)
+        if (iin in csvdata):
+            res["card"] = {"iin": int(iin)}
+            res["card"].update(csvdata[iin])
+            print(card[0:9])
+            if (card[0:9] == '419525008'):
+                res["card"]["currency"] = "UZS"
+        else:
+            logging.warning('iin %s not found', iin)
+            res["code"] = 4 # в бин листе нет данных о карте
     return res
 
 @app.post("/confirm", response_model=Validation)
