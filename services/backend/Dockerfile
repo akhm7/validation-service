@@ -3,7 +3,6 @@ FROM python:3.11
 RUN mkdir /app
 RUN chmod 777 /app
 WORKDIR /app
-RUN mkdir logs
 
 ENV PATH="${PATH}:/root/.local/bin"
 ENV PYTHONPATH=.
