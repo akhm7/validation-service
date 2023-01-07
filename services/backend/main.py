@@ -73,7 +73,7 @@ with open('./binlist.csv', encoding="utf8") as csvfile :
         csvdata[row[0]] = {k:v  for k, v in zip(headers, row[1:])}
 
 def iinNotConfirm(cardNo):
-    if cardNo.startswith(('5440', '5614', '6262', '8600', '9860', '5555', '4073', '4166', '4187', '4294', '4008', '4728', '4062', '4198', '4790')):
+    if cardNo.startswith(('5440', '5614', '6262', '8600', '9860', '5555')):
         logging.warning('cardNo %s is humo/uzcard', cardNo)
         return False
     elif cardNo[0]!='4':
