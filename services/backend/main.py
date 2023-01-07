@@ -171,7 +171,7 @@ async def lookup(card):
     if res["verify"] == False:
         res["code"] == 1
     elif not card.startswith('419525'):
-        res["verify"] = False
+        res["verify"] = True
         res["code"] = 2 # карта не наша
     elif not iinNotConfirm(card):
         res["verify"] = False
