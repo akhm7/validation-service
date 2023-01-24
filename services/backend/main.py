@@ -22,7 +22,7 @@ api_router = APIRouter()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://0.0.0.0:8883"],
+    allow_origins=["http://localhost:8883"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -103,7 +103,7 @@ def lunh(cardNo):
         return False ## Card Failed Check
 
 async def aml(name):
-    conn = await aiomysql.connect(host="0.0.0.0", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
+    conn = await aiomysql.connect(host="10.231.202.31", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
     cur = await conn.cursor()
 
     sql = "SELECT * FROM blacklist WHERE name = \"%s\"" % (name)
@@ -114,7 +114,7 @@ async def aml(name):
     return bool(r)
 
 async def banlist(pan):
-    conn = await aiomysql.connect(host="0.0.0.0", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
+    conn = await aiomysql.connect(host="10.231.202.31", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
     cur = await conn.cursor()
 
     sql = "SELECT * FROM blacklist_pan WHERE pan = %d" % (pan)
@@ -124,7 +124,7 @@ async def banlist(pan):
     return bool(r)
 
 async def whitelist(pan):
-    conn = await aiomysql.connect(host="0.0.0.0", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
+    conn = await aiomysql.connect(host="10.231.202.31", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
     cur = await conn.cursor()
 
     sql = "SELECT * FROM whitelist WHERE pan = %d" % (pan)
@@ -157,7 +157,7 @@ async def root():
 async def lookup(card):
     sql = "INSERT INTO requests (datetime, request, endpoint) VALUES (NOW(), \"%s\", \"%s\")" % (card, "/lookup")
     print(sql)
-    conn = await aiomysql.connect(host="0.0.0.0", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
+    conn = await aiomysql.connect(host="10.231.202.31", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
     cur = await conn.cursor()
     await cur.execute(sql)
     await conn.commit()
@@ -192,7 +192,7 @@ async def lookup(card):
 async def confirm(payment: Payment):
     sql = "INSERT INTO requests (datetime, request, endpoint) VALUES (NOW(), %s, \"%s\")" % (json.dumps(payment.json()), "/confirm")
     print(sql)
-    conn = await aiomysql.connect(host="0.0.0.0", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
+    conn = await aiomysql.connect(host="10.231.202.31", port=3306, user="root", password="V1ZkNGRtTlhSbWxaVnpWeQ==", db="validation-service")
     cur = await conn.cursor()
     await cur.execute(sql)
     await conn.commit()
